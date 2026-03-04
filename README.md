@@ -40,3 +40,13 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
   ├── /hardware       # C++/Arduino code for ESP32 sensors
   ├── /docs           # OOSD reports, UML diagrams, NFR tables
   └── /designs        # UI assets and design exports
+
+## 🎨 UI Design & Prototype
+
+### Scrollable UI Screens
+![Home Screen](design/week1/home_01.png)
+(designs/week1/home_02.png)
+
+
+### Interactive Prototype
+[Click here to view the prototype](https://www.figma.com/design/WClz5aN7DWuVeWLIeBFWdM/Medi_Help?node-id=27-341&t=xPMZwsn3gtXQv8y3-1)
