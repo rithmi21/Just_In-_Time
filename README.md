@@ -50,3 +50,9 @@ Traditional hospital appointment systems rely on fixed time slots, which fail to
 
 ### Interactive Prototype
 [Click here to view the prototype](https://www.figma.com/design/WClz5aN7DWuVeWLIeBFWdM/Medi_Help?node-id=27-341&t=xPMZwsn3gtXQv8y3-1)
+
+<img width="1000" height="529" alt="SBC-NodeMCU-ESP32-C_01" src="https://github.com/user-attachments/assets/21b9d32d-c84f-43cb-be0e-6bb82acb4d92" />
+
+we are going to integrate an esp32 get some signals to the backend 
+
+
