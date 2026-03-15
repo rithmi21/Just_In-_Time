@@ -1,72 +1,78 @@
 import 'package:flutter/material.dart';
 
 class ClinicScreen extends StatelessWidget {
-  const ClinicScreen({super.key});
+  final Function(int)? onBackToHome;
 
-  // Colors based on your uploaded design
-  static const primaryTeal = Color(0xFF53C8D8);
-  static const backgroundGray = Color(0xFFF8F9FB);
+  const ClinicScreen({super.key, this.onBackToHome});
+
+  // Theme Colors
+  static const primaryTeal = Color(0xFF06B6D4);
   static const serviceBlue = Color(0xFFE0F7FA);
 
   @override
   Widget build(BuildContext context) {
-    
-    return Column(
-      children: [
-        _header(context),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                _clinicIntroCard(),
-                const SizedBox(height: 16),
-                _contactInfoCard(),
-                const SizedBox(height: 16),
-                _operatingHoursCard(),
-                const SizedBox(height: 16),
-                _servicesOfferedCard(),
-                const SizedBox(height: 30), // Extra space for better scrolling
-              ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          _header(context),
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _clinicIntroCard(),
+                  const SizedBox(height: 16),
+                  _contactInfoCard(),
+                  const SizedBox(height: 16),
+                  _operatingHoursCard(),
+                  const SizedBox(height: 16),
+                  _servicesOfferedCard(),
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  // --- UI Sections ---
-
-  Widget _header(BuildContext context) {
-    // Handles the status bar/notch area height
-    final double topPadding = MediaQuery.of(context).padding.top;
-
-    return Container(
-      padding: EdgeInsets.only(top: topPadding + 10, left: 20, right: 20, bottom: 25),
-      color: primaryTeal,
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Just-In-time', 
-                style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-              Text('Clinic Info', style: TextStyle(color: Colors.white70)),
-            ],
-          ),
-          Row(
-            children: [
-              Icon(Icons.notifications_none, color: Colors.white, size: 28),
-              SizedBox(width: 15),
-              Icon(Icons.menu, color: Colors.white, size: 28),
-            ],
-          )
         ],
       ),
     );
   }
 
+  // --- HEADER ---
+  Widget _header(BuildContext context) {
+    final double topPadding = MediaQuery.of(context).padding.top;
+
+    return Container(
+      padding: EdgeInsets.only(top: topPadding + 10, left: 25, right: 25, bottom: 25),
+      decoration: const BoxDecoration(
+        color: primaryTeal,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.circular(25),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text('Just-In-time', 
+                style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+              Text('Clinic Information', style: TextStyle(color: Colors.white70, fontSize: 16)),
+            ],
+          ),
+          IconButton(
+            icon: const Icon(Icons.home_outlined, color: Colors.white, size: 30),
+            onPressed: () => onBackToHome?.call(0),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- INTRO CARD WITH FIXED SPREAD OPERATOR ---
   Widget _clinicIntroCard() {
     return _cardWrapper(
       child: Column(
@@ -75,98 +81,101 @@ class ClinicScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: serviceBlue,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.business, color: Color(0xFF03A9F4), size: 35),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: serviceBlue, borderRadius: BorderRadius.circular(15)),
+                child: const Icon(Icons.local_hospital_outlined, color: primaryTeal, size: 35),
               ),
               const SizedBox(width: 15),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Heart Care Clinic', 
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('Specialized Cardiology Center', 
-                    style: TextStyle(color: Colors.grey, fontSize: 14)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text('Heart Care Clinic', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    Text('Specialized Cardiology', style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
               ),
             ],
           ),
           const SizedBox(height: 15),
           Row(
-            children: List.generate(5, (index) => const Icon(Icons.star, color: Colors.orange, size: 20)) +
-              [const SizedBox(width: 8), const Text('4.9 (1,235 reviews)', style: TextStyle(color: Colors.grey))],
+            children: [
+              // FIXED: Spread operator ensures stars are children of the Row
+              ...List.generate(5, (index) => const Icon(Icons.star, color: Colors.orange, size: 20)),
+              const SizedBox(width: 8),
+              const Text('4.9 (1.2k reviews)', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500)),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 15),
           const Text(
-            'A state-of-the-art cardiology clinic providing comprehensive heart care services with advanced diagnostic and treatment facilities.',
-            style: TextStyle(color: Colors.black87, height: 1.4),
+            'Providing premium cardiovascular diagnostics and patient-first care solutions since 2010.',
+            style: TextStyle(color: Colors.black54, height: 1.5),
           ),
         ],
       ),
     );
   }
 
+  // --- CONTACT CARD ---
   Widget _contactInfoCard() {
     return _cardWrapper(
-      title: 'Contact Information',
+      title: 'Get in Touch',
       child: Column(
         children: [
-          _infoRow(Icons.phone_outlined, '011-2223550', 'Main line'),
-          _infoRow(Icons.email_outlined, 'info@heartcareclinic.com', 'Email'),
-          _infoRow(Icons.location_on_outlined, 'No. 110, 1st Lane, Moratuwa, Colombo.', 'Address'),
+          _infoRow(Icons.call_outlined, '011-2223550', 'Reception Desk'),
+          _infoRow(Icons.mail_outline, 'support@heartcare.lk', 'Official Email'),
+          _infoRow(Icons.map_outlined, '110, 1st Lane, Moratuwa', 'Clinic Location'),
         ],
       ),
     );
   }
 
+  // --- HOURS CARD ---
   Widget _operatingHoursCard() {
     return _cardWrapper(
       title: 'Operating Hours',
       child: Column(
         children: [
-          _timeRow('Monday - Friday', '9:00 AM - 5:00 PM'),
-          _timeRow('Saturday', '9:00 AM - 1:00 PM'),
-          _timeRow('Sunday', 'Closed', isClosed: true),
+          _timeRow('Mon - Fri', '08:00 AM - 06:00 PM'),
+          _timeRow('Saturday', '09:00 AM - 02:00 PM'),
+          _timeRow('Sunday', 'Closed for Emergencies Only', isClosed: true),
         ],
       ),
     );
   }
 
+  // --- SERVICES CHIPS ---
   Widget _servicesOfferedCard() {
     return _cardWrapper(
-      title: 'Services Offered',
+      title: 'Services',
       child: Wrap(
         spacing: 10,
         runSpacing: 10,
         children: [
-          _serviceChip('ECG'),
+          _serviceChip('ECG / EKG'),
           _serviceChip('Stress Test'),
-          _serviceChip('Echo Test'),
-          _serviceChip('Holter Monitor'),
+          _serviceChip('Echocardiogram'),
+          _serviceChip('Blood Labs'),
         ],
       ),
     );
   }
 
-  // --- Helper Widgets ---
-
+  // --- PRIVATE REUSABLE HELPERS ---
   Widget _cardWrapper({String? title, required Widget child}) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title != null) ...[
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: primaryTeal)),
             const SizedBox(height: 15),
           ],
           child,
@@ -177,21 +186,19 @@ class ClinicScreen extends StatelessWidget {
 
   Widget _infoRow(IconData icon, String main, String sub) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 15),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(10)),
-            child: Icon(icon, color: Colors.grey, size: 22),
-          ),
+          CircleAvatar(backgroundColor: serviceBlue, radius: 18, child: Icon(icon, color: primaryTeal, size: 18)),
           const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(main, style: const TextStyle(fontWeight: FontWeight.w600)),
-              Text(sub, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(main, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                Text(sub, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+              ],
+            ),
           ),
         ],
       ),
@@ -200,12 +207,12 @@ class ClinicScreen extends StatelessWidget {
 
   Widget _timeRow(String day, String hours, {bool isClosed = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(day, style: const TextStyle(color: Colors.black54)),
-          Text(hours, style: TextStyle(fontWeight: FontWeight.bold, color: isClosed ? Colors.red : Colors.black87)),
+          Text(day, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Text(hours, style: TextStyle(color: isClosed ? Colors.red : Colors.black87, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -213,16 +220,10 @@ class ClinicScreen extends StatelessWidget {
 
   Widget _serviceChip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: serviceBlue, borderRadius: BorderRadius.circular(10)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check_circle_outline, color: Color(0xFF00BCD4), size: 18),
-          const SizedBox(width: 6),
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(color: serviceBlue, borderRadius: BorderRadius.circular(30)),
+      child: Text(label, style: const TextStyle(color: primaryTeal, fontWeight: FontWeight.bold, fontSize: 12)),
     );
   }
 }
+/////
