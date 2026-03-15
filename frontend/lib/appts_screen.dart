@@ -21,7 +21,6 @@ class ApptsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
-                // Added shadow for a modern look
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -65,12 +64,16 @@ class ApptsScreen extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  // Action Button
+                  // Updated Action Button
                   SizedBox(
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      // --- NAVIGATION LOGIC ADDED HERE ---
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/book_appt');
+                      },
+                      // ------------------------------------
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryTeal,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -94,7 +97,6 @@ class ApptsScreen extends StatelessWidget {
   // --- Helper Widgets ---
 
   Widget _header(BuildContext context) {
-    // Detects status bar height (notch) to prevent text overlap
     final double topPadding = MediaQuery.of(context).padding.top;
 
     return Container(
