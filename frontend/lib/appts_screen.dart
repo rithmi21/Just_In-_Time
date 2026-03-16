@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 class ApptsScreen extends StatelessWidget {
   const ApptsScreen({super.key});
 
-  // Signature Just-In-Time Colors
-  static const primaryTeal = Color(0xFF06B6D4);
+  // UI Colors
+  static const primaryTeal = Color(0xFF40AFC6);
+  static const backgroundGray = Color(0xFFF8F4F2);
   static const highlightBlue = Color(0xFFE0F7FA);
 
   @override
   Widget build(BuildContext context) { 
     return Column(
       children: [
-        _header(context), 
+        _header(context), // Header with dynamic padding
         Expanded(
           child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(), // Essential for Chrome emulator
             padding: const EdgeInsets.all(20),
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -62,7 +62,7 @@ class ApptsScreen extends StatelessWidget {
                     status: "Upcoming",
                   ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 10),
 
                   // Updated Action Button
                   SizedBox(
@@ -85,9 +85,8 @@ class ApptsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 40),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -95,40 +94,54 @@ class ApptsScreen extends StatelessWidget {
     );
   }
 
-  // --- Header UI ---
+  // --- Helper Widgets ---
+
   Widget _header(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
+
     return Container(
-      padding: EdgeInsets.only(top: topPadding + 15, left: 25, right: 25, bottom: 25),
-      decoration: const BoxDecoration(
-        color: primaryTeal,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
+      padding: EdgeInsets.only(top: topPadding + 15, left: 20, right: 20, bottom: 25),
+      decoration: const BoxDecoration(color: primaryTeal),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Text("Just-In-time", 
-                style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-              Text("Appointments Hub", style: TextStyle(color: Colors.white70, fontSize: 16)),
+              Text(
+                "Just-In-time",
+                style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Appointments",
+                style: TextStyle(color: Colors.white70, fontSize: 16),
+              ),
             ],
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.white, size: 30),
-            onPressed: () => Navigator.pushNamed(context, '/notifications'),
-          ),
+          Row(
+            children: [
+              _headerIcon(Icons.notifications_none),
+              const SizedBox(width: 10),
+              _headerIcon(Icons.menu),
+            ],
+          )
         ],
       ),
     );
   }
+
+  Widget _headerIcon(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.3),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: Colors.white, size: 28),
+    );
+  }
 }
 
-// --- Reusable Appointment Card ---
 class AppointmentCard extends StatelessWidget {
   final String name, type, date, time, status;
   final bool isHighlighted;
@@ -147,12 +160,12 @@ class AppointmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: isHighlighted ? ApptsScreen.highlightBlue : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: isHighlighted ? ApptsScreen.primaryTeal : Colors.grey.shade200,
+          color: isHighlighted ? ApptsScreen.primaryTeal : Colors.grey.shade300,
           width: 1.5,
         ),
       ),
@@ -163,47 +176,32 @@ class AppointmentCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              _statusChip(status),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: status == "Today" ? const Color(0xFF1CB5E0) : Colors.grey[600],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(status, style: const TextStyle(color: Colors.white, fontSize: 12)),
+              ),
             ],
           ),
-          const SizedBox(height: 5),
-          Text(type, style: const TextStyle(color: Colors.black54, fontSize: 15)),
-          const Divider(height: 25, thickness: 0.5),
+          const SizedBox(height: 4),
+          Text(type, style: TextStyle(color: Colors.grey[600], fontSize: 15)),
+          const SizedBox(height: 12),
           Row(
             children: [
-              _infoRow(Icons.calendar_today_outlined, date),
-              const SizedBox(width: 25),
-              _infoRow(Icons.access_time, time),
+              Icon(Icons.calendar_today_outlined, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 6),
+              Text(date, style: TextStyle(color: Colors.grey[600])),
+              const SizedBox(width: 20),
+              Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 6),
+              Text(time, style: TextStyle(color: Colors.grey[600])),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget _statusChip(String status) {
-    bool active = status == "Today";
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: active ? ApptsScreen.primaryTeal : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(status, style: TextStyle(
-        color: active ? Colors.white : Colors.black54, 
-        fontSize: 11, 
-        fontWeight: FontWeight.bold
-      )),
-    );
-  }
-
-  Widget _infoRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: ApptsScreen.primaryTeal),
-        const SizedBox(width: 6),
-        Text(text, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-      ],
     );
   }
 }
